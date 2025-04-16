@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Number Guessing Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .game-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 300px;
+    }
+
+    input[type="number"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 0.25rem;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .guess-btn {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .reset-btn {
+      background-color: #2196F3;
+      color: white;
+    }
+
+    .hint-btn {
+      background-color: #FF9800;
+      color: white;
+    }
+
+    .message {
+      margin-top: 1rem;
+      font-weight: bold;
+      min-height: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h2>Guess the Number (1–100)</h2>
+    <input type="number" id="guessInput" placeholder="Enter your guess" min="1" max="100" />
+    <br />
+    <button class="guess-btn" onclick="checkGuess()">Guess</button>
+    <button class="reset-btn" onclick="resetGame()">Reset</button>
+    <button class="hint-btn" onclick="giveHint()">Hint</button>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    let secretNumber;
+    let attempts;
+
+    function generateNumber() {
+      secretNumber = Math.floor(Math.random() * 100) + 1;
+      attempts = 0;
+    }
+
+    function checkGuess() {
+      const guess = parseInt(document.getElementById('guessInput').value);
+      const messageEl = document.getElementById('message');
+
+      if (isNaN(guess) || guess < 1 || guess > 100) {
+        messageEl.textContent = 'Please enter a number between 1 and 100.';
+        return;
+      }
+
+      attempts++;
+
+      if (guess === secretNumber) {
+        messageEl.textContent = `🎉 Correct! You guessed it in ${attempts} tries.`;
+      } else if (guess < secretNumber) {
+        messageEl.textContent = 'Too low! Try again.';
+      } else {
+        messageEl.textContent = 'Too high! Try again.';
+      }
+    }
+
+    function giveHint() {
+      const isEven = secretNumber % 2 === 0;
+      const rangeMin = Math.max(1, secretNumber - 5);
+      const rangeMax = Math.min(100, secretNumber + 5);
+      const messageEl = document.getElementById('message');
+
+      messageEl.textContent = `Hint: The number is ${isEven ? 'even' : 'odd'} and between ${rangeMin} and ${rangeMax}.`;
+    }
+
+    function resetGame() {
+      generateNumber();
+      document.getElementById('guessInput').value = '';
+      document.getElementById('message').textContent = 'New number generated. Start guessing!';
+    }
+
+    // Initialize on page load
+    generateNumber();
+  </script>
+</body>
+</html>
